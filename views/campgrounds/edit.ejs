@@ -1,0 +1,92 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="row">
+  <h1 class="text-center">Edit Campground</h1>
+  <div class="col-6 offset-3">
+    <form
+      action="/campgrounds/<%= foundCampground._id %>?_method=PUT"
+      method="post"
+      class="validated-form"
+      novalidate
+    >
+      <div class="mb-3">
+        <label class="form-label" for="title">Title:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          name="campground[title]"
+          value="<%= foundCampground.title %>"
+          placeholder="Enter a title"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="location">Location:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="location"
+          name="campground[location]"
+          value="<%= foundCampground.location %>"
+          placeholder="Enter a title"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="image">Image URL:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="image"
+          name="campground[image]"
+          value="<%= foundCampground.image %>"
+          placeholder="Enter a link to your image"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="price">Price:</label>
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">$</span>
+          <input
+            type="text"
+            class="form-control"
+            value="<%= foundCampground.price %>"
+            placeholder="Price"
+            id="price"
+            name="campground[price]"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="description">Description:</label>
+        <textarea
+          type="text"
+          class="form-control"
+          id="description"
+          name="campground[description]"
+          placeholder="Add a description"
+          required
+        >
+<%= foundCampground.description %></textarea
+        >
+      </div>
+
+      <button class="btn btn-info">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<hr />
+<div class="text-center">
+  <a href="/campgrounds/<%= foundCampground._id %>" class="btn btn-danger"
+    >Go back</a
+  >
+</div>
+<hr />

@@ -1,0 +1,86 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="row">
+  <h1 class="text-center">Create a new campground</h1>
+  <div class="col-6 offset-3">
+    <form class="validated-form" action="/campgrounds" method="post" novalidate>
+      <div class="mb-3">
+        <label class="form-label" for="title">Title:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          name="campground[title]"
+          placeholder="Enter a title"
+          required
+        />
+        <div class="invalid-feedback">Please enter a title.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="location">Location:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="location"
+          name="campground[location]"
+          placeholder="Enter a title"
+          required
+        />
+        <div class="invalid-feedback">Please enter a location.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="image">Image URL:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="image"
+          name="campground[image]"
+          placeholder="Enter a link to your image"
+          required
+        />
+        <div class="invalid-feedback">Please enter a valid image URL.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="price">Price:</label>
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">$</span>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Price"
+            id="price"
+            name="campground[price]"
+            required
+          />
+          <div class="invalid-feedback">Please enter a price.</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="description">Description:</label>
+        <textarea
+          type="text"
+          class="form-control"
+          id="description"
+          name="campground[description]"
+          placeholder="Add a description"
+          required
+        ></textarea>
+        <div class="invalid-feedback">Description is required.</div>
+      </div>
+
+      <button class="btn btn-success">Add Campground</button>
+    </form>
+  </div>
+</div>
+
+<hr />
+<section class="text-center">
+  <a class="btn btn-danger" href="/campgrounds">Cancel</a>
+</section>
+<hr />
+
+
