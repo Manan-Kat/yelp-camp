@@ -10,21 +10,19 @@ const ejsMate = require("ejs-mate");
 const handleAsyncFunction = require("./utils/HandleAsyncFunction");
 const ExpressError = require("./utils/ExpressError");
 
-// joi: its a schema validation library that can be used to validate the data that we are getting from the form on our frontend
-// even though we are stopping the user for submitting to the server on the frontend, we dont have any validation or checks for the data in the actual api
-// so any user can hit the api and create epmty campgrounds or with invalid data, this is where we use joi
-// NOTE that this is not a mongoose schema at all, this is basically a well defined system to check if the object meets our requirements
-const Joi = require("joi");
-// lets create a basic campground object schema that we are basically using everywhere. we will define its structure once and use that definition again and again
-// the best part is that we can change this structure directly from here and it would be applied everywhere rather than having to change it in every single route
-const campgroundSchema = Joi.object({
-  campground: Joi.object({
-    title: Joi.string().required(),
-    price: Joi.number().required().min(0),
-    location: Joi.string().required(),
-    description: Joi.string().required(),
-  }).required(),
-}).required();
+const { campgroundSchema } = require("./joiSchemas/schemas");
+
+// now that we have a defined schema lets make a middleware function that can be used anywhere we want
+const validateCamoground = (req, res, next) => {
+  const { error } = campgroundSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(", ");
+    console.log(msg);
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
 
 // importing models
 const Campground = require("./models/campground");
@@ -81,12 +79,18 @@ app.get("/campgrounds/new", (req, res) => {
 // API to create a new campground
 app.post(
   "/campgrounds",
+  validateCamoground,
   handleAsyncFunction(async (req, res, next) => {
     // for creating a new campground, we are so far only restricting the user from submitting on the frontend, but have put no checks here
     // so if someone hits the endpoint on postman they would be able to create a empty campground
     // we should make individual elements required on the schema, but can add a simple check here
-    if (!req.body.campground)
-      throw new ExpressError("Campground data cannot be empty", 400);
+
+    // if (!req.body.campground)
+    //   throw new ExpressError("Campground data cannot be empty", 400);
+
+    // NOTE:
+    // added a middlware that uses joi which is a much more sofisticated approach compared to a manual approach
+
     const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
@@ -115,6 +119,7 @@ app.get(
 // Note that html does NOT support PUT requests, so we use method-override to override the method to PUT which we have to specify in the query with the string that we have specified in the method-override middleware initiation
 app.put(
   "/campgrounds/:id",
+  validateCamoground,
   handleAsyncFunction(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findByIdAndUpdate(
